@@ -57,7 +57,7 @@
 .header__icons {
   display: flex;
   align-items: center;
-  margin-right: -30px;
+  margin-right: -10px;
 }
 .header__icons .MuiSvgIcon-root {
   font-size: 28px;
