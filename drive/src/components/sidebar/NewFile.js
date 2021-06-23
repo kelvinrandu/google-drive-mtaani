@@ -45,27 +45,33 @@ const NewFile = () => {
       setFile(e.target.files[0])
     }
   }
-  const handleUpload = () =>{
+  const handleUpload = () => {
+    setUploading(true)
 
-    setUploading(true);
-    storage.ref(`files/${file.name}`).put(file).then(snapshot=>{
-      console.log(snapshot)
-      storage.ref().child(file.name).getDownloadURL().then(url=>{
-        db.collection('myFiles').add({
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          caption: file.name,
-          fileUrl: url,
-          size: snapshot._delegate.bytesTransferred,
+    storage.ref(`files/${file.name}`).put(file).then(snapshot => {
+        console.log(snapshot)
+
+        storage.ref('files').child(file.name).getDownloadURL().then(url => {
+            //post image inside the db
+
+            db.collection('myFiles').add({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                caption: file.name,
+                fileUrl: url,
+                size: snapshot._delegate.bytesTransferred,
+            })
+
+            setUploading(false)
+            setOpen(false)
+            setFile(null)
         })
-        setUploading(false)
-        setOpen(false)
-        setFile(null)
 
-      })
-
+        storage.ref('files').child(file.name).getMetadata().then(meta => {
+            console.log(meta.size)
+        })
 
     })
-  };
+}
 
   return (
     <div className="newFile">
@@ -77,7 +83,7 @@ const NewFile = () => {
         open={open}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
-        aria-describdby="simple-modal-description"
+        aria-describedby="simple-modal-description"
       >
         <div style={modalStyle} className={classes.paper}>
           <p> select files you want to upload</p>
