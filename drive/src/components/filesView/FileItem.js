@@ -19,7 +19,7 @@ const FileItem = ({ id, caption, timestamp, fileUrl, size }) => {
     };
     return (
         <div className="fileItem"> 
-        <a href={fileUrl} target="_blank" download>
+        <a href={fileUrl} target="_blank" rel="noreferrer" download>
         <div className="fileItem--left">
             <InsertDriveFileIcon />
             <p>{caption}</p>
